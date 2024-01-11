@@ -17,7 +17,7 @@ namespace Infoware.UnitOfWork.Collections
         /// <returns>An instance of the inherited from <see cref="IPagedList{T}"/> interface.</returns>
         public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IQueryable<T> source, int pageIndex, int pageSize, CancellationToken cancellationToken = default)
         {
-            var count = await source.CountAsync(cancellationToken).ConfigureAwait(false);
+            var count = await source.TagWith("[[COUNT]]").CountAsync(cancellationToken).ConfigureAwait(false);
             var items = await source.Skip((pageIndex - 1) * pageSize)
                                     .Take(pageSize).ToListAsync(cancellationToken).ConfigureAwait(false);
 
