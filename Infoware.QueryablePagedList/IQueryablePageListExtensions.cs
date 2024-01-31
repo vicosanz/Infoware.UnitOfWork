@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Infoware.UnitOfWork.Collections
+namespace Infoware.QueryablePagedList
 {
     public static class IQueryablePageListExtensions
     {

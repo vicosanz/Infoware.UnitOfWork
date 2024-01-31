@@ -1,10 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Ardalis.Specification;
 
 namespace Infoware.UnitOfWork
 {
-    public interface IRepository<TContext, TEntity> : IRepository<TEntity>
-        where TContext : DbContext
-        where TEntity : class
+    public interface IRepository<T> : IRepositoryBase<T> where T : class, IAggregateRoot
     {
     }
 }

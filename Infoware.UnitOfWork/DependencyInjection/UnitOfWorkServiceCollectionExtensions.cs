@@ -19,10 +19,6 @@ namespace Infoware.UnitOfWork.DependencyInjection
         /// </remarks>
         public static IServiceCollection AddUnitOfWork<TContext>(this IServiceCollection services) where TContext : DbContext
         {
-            services.AddScoped<IRepositoryFactory, UnitOfWork<TContext>>();
-            // Following has a issue: IUnitOfWork cannot support multiple dbcontext/database, 
-            // that means cannot call AddUnitOfWork<TContext> multiple times.
-            // Solution: check IUnitOfWork whether or null
             services.AddScoped<IUnitOfWork, UnitOfWork<TContext>>();
             services.AddScoped<IUnitOfWork<TContext>, UnitOfWork<TContext>>();
 
@@ -94,24 +90,6 @@ namespace Infoware.UnitOfWork.DependencyInjection
             services.AddScoped<IUnitOfWork<TContext2>, UnitOfWork<TContext2>>();
             services.AddScoped<IUnitOfWork<TContext3>, UnitOfWork<TContext3>>();
             services.AddScoped<IUnitOfWork<TContext4>, UnitOfWork<TContext4>>();
-
-            return services;
-        }
-
-        /// <summary>
-        /// Registers the custom repository as a service in the <see cref="IServiceCollection"/>.
-        /// </summary>
-        /// <typeparam name="TContext">The type of the db context.</typeparam>
-        /// <typeparam name="TEntity">The type of the entity.</typeparam>
-        /// <typeparam name="TRepository">The type of the custom repositry.</typeparam>
-        /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
-        /// <returns>The same service collection so that multiple calls can be chained.</returns>
-        public static IServiceCollection AddCustomRepository<TContext, TEntity, TRepository>(this IServiceCollection services)
-            where TContext: DbContext
-            where TEntity : class
-            where TRepository : class, IRepository<TContext, TEntity>
-        {
-            services.AddScoped<IRepository<TEntity>, TRepository>();
 
             return services;
         }

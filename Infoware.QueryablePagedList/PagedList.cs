@@ -1,4 +1,4 @@
-﻿namespace Infoware.UnitOfWork.Collections
+﻿namespace Infoware.QueryablePagedList
 {
     /// <summary>
     /// Represents the default implementation of the <see cref="IPagedList{T}"/> interface.

@@ -1,4 +1,4 @@
-﻿namespace Infoware.UnitOfWork.Collections
+﻿namespace Infoware.QueryablePagedList
 {
     /// <summary>
     /// Provides the interface(s) for paged list of any type.

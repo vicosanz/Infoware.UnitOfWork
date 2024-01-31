@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <Description>Queryable PagedList</Description>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <PackageProjectUrl>https://github.com/vicosanz/Infoware.UnitOfWork</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/vicosanz/Infoware.UnitOfWork</RepositoryUrl>
+	  <Authors>Victor Sanchez</Authors>
+	  <Company>Infoware Soluciones</Company>
+	  <Version>1.0.0</Version>
+	  <PackageReleaseNotes>Queryable PagedList</PackageReleaseNotes>
+  </PropertyGroup>
+
+</Project>

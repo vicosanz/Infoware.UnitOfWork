@@ -1,4 +1,4 @@
-﻿namespace Infoware.UnitOfWork.Collections
+﻿namespace Infoware.QueryablePagedList
 {
     /// <summary>
     /// Provides some extension methods for <see cref="IEnumerable{T}"/> to provide paging capability.

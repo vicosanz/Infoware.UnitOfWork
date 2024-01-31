@@ -1,4 +1,4 @@
-﻿namespace Infoware.UnitOfWork.Collections
+﻿namespace Infoware.QueryablePagedList
 {
     public class PaginationData
     {

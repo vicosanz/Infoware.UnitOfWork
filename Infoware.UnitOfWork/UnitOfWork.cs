@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Data;
 using System.Text.RegularExpressions;
-using System.Transactions;
 
 namespace Infoware.UnitOfWork
 {
@@ -16,7 +14,6 @@ namespace Infoware.UnitOfWork
     {
         private readonly TContext _context;
         private bool disposed = false;
-        private readonly Dictionary<Type, object> _repositories = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork{TContext}"/> class.
@@ -32,53 +29,6 @@ namespace Infoware.UnitOfWork
         /// </summary>
         /// <returns>The instance of type <typeparamref name="TContext"/>.</returns>
         public TContext DbContext => _context;
-
-        /// <summary>
-        /// Changes the database name. This require the databases in the same machine. NOTE: This only work for MySQL right now.
-        /// </summary>
-        /// <param name="database">The database name.</param>
-        /// <remarks>
-        /// This only been used for supporting multiple databases in the same model. This require the databases in the same machine.
-        /// </remarks>
-        public void ChangeDatabase(string database)
-        {
-            var connection = _context.Database.GetDbConnection();
-            if (connection.State.HasFlag(ConnectionState.Open))
-            {
-                connection.ChangeDatabase(database);
-            }
-            else
-            {
-                var connectionString = Regex.Replace(connection.ConnectionString.Replace(" ", ""), @"(?<=[Dd]atabase=)\w+(?=;)", database, RegexOptions.Singleline);
-                connection.ConnectionString = connectionString;
-            }
-
-            // Following code only working for mysql.
-            var items = _context.Model.GetEntityTypes();
-            foreach (var item in items)
-            {
-                if (item is IConventionEntityType entityType)
-                {
-                    entityType.SetSchema(database);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the specified repository for the <typeparamref name="TEntity"/>.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the entity.</typeparam>
-        /// <returns>An instance of type inherited from <see cref="IRepository{TEntity}"/> interface.</returns>
-        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
-        {
-            var type = typeof(TEntity);
-            if (!_repositories.ContainsKey(type))
-            {
-                _repositories[type] = new Repository<TContext, TEntity>(_context);
-            }
-
-            return (IRepository<TEntity>)_repositories[type];
-        }
 
         /// <summary>
         /// Executes the specified raw SQL command.
@@ -135,12 +85,6 @@ namespace Infoware.UnitOfWork
             {
                 if (disposing)
                 {
-                    // clear repositories
-                    if (_repositories != null)
-                    {
-                        _repositories.Clear();
-                    }
-
                     // dispose the db context.
                     _context.Dispose();
                 }
