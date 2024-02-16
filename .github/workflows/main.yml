@@ -23,7 +23,7 @@ jobs:
       # Publish
       - name: publish on version change Infoware.UnitOfWork
         id: publish_nuget_infoware_unitofwork
-        uses: vicosanz/publish-nuget@v2.5.7
+        uses: vicosanz/publish-nuget@v2.5.6
         with:
           # Filepath of the project to be packaged, relative to root of repository
           PROJECT_FILE_PATH: Infoware.UnitOfWork/Infoware.UnitOfWork.csproj
@@ -60,7 +60,7 @@ jobs:
       # Publish
       - name: publish on version change Infoware.QueryablePagedList
         id: publish_nuget_infoware_queryablepagedlist
-        uses: vicosanz/publish-nuget@v2.5.7
+        uses: vicosanz/publish-nuget@v2.5.6
         with:
           # Filepath of the project to be packaged, relative to root of repository
           PROJECT_FILE_PATH: Infoware.QueryablePagedList/Infoware.QueryablePagedList.csproj
@@ -97,7 +97,7 @@ jobs:
       # Publish
       - name: publish on version change Infoware.Specification.EfCore
         id: publish_nuget_infowarespecificationefCore
-        uses: vicosanz/publish-nuget@v2.5.7
+        uses: vicosanz/publish-nuget@v2.5.6
         with:
           # Filepath of the project to be packaged, relative to root of repository
           PROJECT_FILE_PATH: Infoware.Specification.EfCore/Infoware.Specification.EfCore.csproj
