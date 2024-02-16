@@ -1,8 +1,9 @@
 ﻿using Ardalis.Specification;
 using Infoware.Specification.EfCore.Evaluators;
+using Infoware.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infoware.UnitOfWork
+namespace Infoware.Specification.EfCore
 {
 	public abstract class Repository<T> : IRepository<T> where T : class, IAggregateRoot
 	{
@@ -38,7 +39,7 @@ namespace Infoware.UnitOfWork
 		/// <inheritdoc/>
 		public virtual async Task<T?> GetByIdAsync<TId>(TId id, CancellationToken cancellationToken = default) where TId : notnull
 		{
-			return await _dbContext.Set<T>().FindAsync(new object[] { id }, cancellationToken: cancellationToken);
+			return await _dbContext.Set<T>().FindAsync([id], cancellationToken: cancellationToken);
 		}
 
 		public virtual IQueryable<T> Select(ISpecification<T> specification)

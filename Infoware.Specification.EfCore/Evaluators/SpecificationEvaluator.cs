@@ -11,19 +11,15 @@ public class SpecificationEvaluator : ISpecificationEvaluator
 	/// </summary>
 	public static SpecificationEvaluator Default { get; } = new SpecificationEvaluator();
 
-	/// <summary>
-	/// <see cref="SpecificationEvaluator" /> instance with default evaluators and enabled caching.
-	/// </summary>
-	public static SpecificationEvaluator Cached { get; } = new SpecificationEvaluator(true);
+	protected List<IEvaluator> Evaluators { get; } = [];
 
-	protected List<IEvaluator> Evaluators { get; } = new List<IEvaluator>();
-
-	public SpecificationEvaluator(bool cacheEnabled = false)
+	public SpecificationEvaluator()
 	{
-		Evaluators.AddRange(new IEvaluator[]
-		{
+		Evaluators.AddRange(
+		[
 			WhereEvaluator.Instance,
 			SearchEvaluator.Instance,
+			IncludeEvaluator.Default,
 			OrderEvaluator.Instance,
 			PaginationEvaluator.Instance,
 			AsNoTrackingEvaluator.Instance,
@@ -31,7 +27,7 @@ public class SpecificationEvaluator : ISpecificationEvaluator
 			AsTrackingEvaluator.Instance,
 			IgnoreQueryFiltersEvaluator.Instance,
 			AsSplitQueryEvaluator.Instance
-		});
+		]);
 	}
 
 	public SpecificationEvaluator(IEnumerable<IEvaluator> evaluators)

@@ -74,7 +74,7 @@ public class IncludeEvaluator : IEvaluator
 	{
 		_ = includeInfo ?? throw new ArgumentNullException(nameof(includeInfo));
 
-		var result = _includeMethodInfo.MakeGenericMethod(includeInfo.EntityType, includeInfo.PropertyType).Invoke(null, new object[] { query, includeInfo.LambdaExpression });
+		var result = _includeMethodInfo.MakeGenericMethod(includeInfo.EntityType, includeInfo.PropertyType).Invoke(null, [query, includeInfo.LambdaExpression]);
 
 		_ = result ?? throw new TargetException();
 
@@ -89,65 +89,12 @@ public class IncludeEvaluator : IEvaluator
 		var result = (IsGenericEnumerable(includeInfo.PreviousPropertyType, out var previousPropertyType)
 				? _thenIncludeAfterEnumerableMethodInfo
 				: _thenIncludeAfterReferenceMethodInfo).MakeGenericMethod(includeInfo.EntityType, previousPropertyType, includeInfo.PropertyType)
-			.Invoke(null, new object[] { query, includeInfo.LambdaExpression, });
+			.Invoke(null, [query, includeInfo.LambdaExpression,]);
 
 		_ = result ?? throw new TargetException();
 
 		return (IQueryable<T>)result;
 	}
-
-	// (source, selector) => EntityFrameworkQueryableExtensions.Include<TEntity, TProperty>((IQueryable<TEntity>)source, (Expression<Func<TEntity, TProperty>>)selector);
-	private static Lazy<Func<IQueryable, LambdaExpression, IQueryable>> CreateIncludeDelegate((Type EntityType, Type PropertyType, Type? PreviousPropertyType) cacheKey)
-		=> new(() =>
-		{
-			var concreteInclude = _includeMethodInfo.MakeGenericMethod(cacheKey.EntityType, cacheKey.PropertyType);
-			var sourceParameter = Expression.Parameter(typeof(IQueryable));
-			var selectorParameter = Expression.Parameter(typeof(LambdaExpression));
-
-			var call = Expression.Call(
-				  concreteInclude,
-				  Expression.Convert(sourceParameter, typeof(IQueryable<>).MakeGenericType(cacheKey.EntityType)),
-				  Expression.Convert(selectorParameter, typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(cacheKey.EntityType, cacheKey.PropertyType))));
-
-			var lambda = Expression.Lambda<Func<IQueryable, LambdaExpression, IQueryable>>(call, sourceParameter, selectorParameter);
-
-			return lambda.Compile();
-		});
-
-	// ((source, selector) =>
-	//     EntityFrameworkQueryableExtensions.ThenInclude<TEntity, TPreviousProperty, TProperty>(
-	//         (IIncludableQueryable<TEntity, TPreviousProperty>)source,
-	//         (Expression<Func<TPreviousProperty, TProperty>>)selector);
-	// (source, selector) =>
-	//     EntityFrameworkQueryableExtensions.ThenInclude<TEntity, TPreviousProperty, TProperty>(
-	//         (IIncludableQueryable<TEntity, IEnumerable<TPreviousProperty>>)source,
-	//         (Expression<Func<TPreviousProperty, TProperty>>)selector);
-	private static Lazy<Func<IQueryable, LambdaExpression, IQueryable>> CreateThenIncludeDelegate((Type EntityType, Type PropertyType, Type? PreviousPropertyType) cacheKey)
-		=> new(() =>
-		{
-			_ = cacheKey.PreviousPropertyType ?? throw new ArgumentNullException(nameof(cacheKey.PreviousPropertyType));
-
-			var thenIncludeInfo = _thenIncludeAfterReferenceMethodInfo;
-			if (IsGenericEnumerable(cacheKey.PreviousPropertyType, out var previousPropertyType))
-			{
-				thenIncludeInfo = _thenIncludeAfterEnumerableMethodInfo;
-			}
-
-			var concreteThenInclude = thenIncludeInfo.MakeGenericMethod(cacheKey.EntityType, previousPropertyType, cacheKey.PropertyType);
-			var sourceParameter = Expression.Parameter(typeof(IQueryable));
-			var selectorParameter = Expression.Parameter(typeof(LambdaExpression));
-
-			var call = Expression.Call(
-				  concreteThenInclude,
-				  Expression.Convert(
-					  sourceParameter,
-					  typeof(IIncludableQueryable<,>).MakeGenericType(cacheKey.EntityType, cacheKey.PreviousPropertyType)), // cacheKey.PreviousPropertyType must be exact type, not generic type argument
-				  Expression.Convert(selectorParameter, typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(previousPropertyType, cacheKey.PropertyType))));
-
-			var lambda = Expression.Lambda<Func<IQueryable, LambdaExpression, IQueryable>>(call, sourceParameter, selectorParameter);
-
-			return lambda.Compile();
-		});
 
 	private static bool IsGenericEnumerable(Type type, out Type propertyType)
 	{
