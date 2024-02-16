@@ -11,12 +11,12 @@ public class SpecificationEvaluator : ISpecificationEvaluator
 	/// </summary>
 	public static SpecificationEvaluator Default { get; } = new SpecificationEvaluator();
 
-	protected List<IEvaluator> Evaluators { get; } = [];
+	protected List<IEvaluator> Evaluators { get; } = new();
 
 	public SpecificationEvaluator()
 	{
-		Evaluators.AddRange(
-		[
+		Evaluators.AddRange(new IEvaluator[]
+		{
 			WhereEvaluator.Instance,
 			SearchEvaluator.Instance,
 			IncludeEvaluator.Default,
@@ -27,7 +27,7 @@ public class SpecificationEvaluator : ISpecificationEvaluator
 			AsTrackingEvaluator.Instance,
 			IgnoreQueryFiltersEvaluator.Instance,
 			AsSplitQueryEvaluator.Instance
-		]);
+		});
 	}
 
 	public SpecificationEvaluator(IEnumerable<IEvaluator> evaluators)

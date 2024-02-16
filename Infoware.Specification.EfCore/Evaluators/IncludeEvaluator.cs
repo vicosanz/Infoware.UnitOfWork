@@ -74,7 +74,7 @@ public class IncludeEvaluator : IEvaluator
 	{
 		_ = includeInfo ?? throw new ArgumentNullException(nameof(includeInfo));
 
-		var result = _includeMethodInfo.MakeGenericMethod(includeInfo.EntityType, includeInfo.PropertyType).Invoke(null, [query, includeInfo.LambdaExpression]);
+		var result = _includeMethodInfo.MakeGenericMethod(includeInfo.EntityType, includeInfo.PropertyType).Invoke(null, new object[] { query, includeInfo.LambdaExpression });
 
 		_ = result ?? throw new TargetException();
 
@@ -89,7 +89,7 @@ public class IncludeEvaluator : IEvaluator
 		var result = (IsGenericEnumerable(includeInfo.PreviousPropertyType, out var previousPropertyType)
 				? _thenIncludeAfterEnumerableMethodInfo
 				: _thenIncludeAfterReferenceMethodInfo).MakeGenericMethod(includeInfo.EntityType, previousPropertyType, includeInfo.PropertyType)
-			.Invoke(null, [query, includeInfo.LambdaExpression,]);
+			.Invoke(null, new object[] { query, includeInfo.LambdaExpression, });
 
 		_ = result ?? throw new TargetException();
 
