@@ -22,22 +22,24 @@
         /// <param name="pageSize">The size of the page.</param>
         internal PagedList(IEnumerable<T> source, int pageIndex, int pageSize)
         {
-            PaginationData.PageIndex = pageIndex;
-            PaginationData.PageSize = pageSize;
+            int totalCount;
+
             if (source is IQueryable<T> querable)
             {
-                PaginationData.TotalCount = querable.Count();
-                PaginationData.TotalPages = (int)Math.Ceiling(PaginationData.TotalCount / (double)PaginationData.PageSize);
-
+                totalCount = querable.Count();
                 Items = querable.Skip((PaginationData.PageIndex - 1) * PaginationData.PageSize).Take(PaginationData.PageSize).ToList();
             }
             else
             {
-                PaginationData.TotalCount = source.Count();
-                PaginationData.TotalPages = (int)Math.Ceiling(PaginationData.TotalCount / (double)PaginationData.PageSize);
-
+                totalCount = source.Count();
                 Items = source.Skip((PaginationData.PageIndex - 1) * PaginationData.PageSize).Take(PaginationData.PageSize).ToList();
             }
+            PaginationData = new()
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                TotalCount = totalCount
+            };
         }
 
         /// <summary>
@@ -71,26 +73,28 @@
         /// <param name="pageSize">The size of the page.</param>
         public PagedList(IEnumerable<TSource> source, Func<IEnumerable<TSource>, IEnumerable<TResult>> converter, int pageIndex, int pageSize)
         {
-            PaginationData.PageIndex = pageIndex;
-            PaginationData.PageSize = pageSize;
+            int totalCount;
+
             if (source is IQueryable<TSource> querable)
             {
-                PaginationData.TotalCount = querable.Count();
-                PaginationData.TotalPages = (int)Math.Ceiling(PaginationData.TotalCount / (double)PaginationData.PageSize);
-
+                totalCount = querable.Count();
                 var items = querable.Skip((PaginationData.PageIndex - 1) * PaginationData.PageSize).Take(PaginationData.PageSize).ToArray();
 
                 Items = new List<TResult>(converter(items));
             }
             else
             {
-                PaginationData.TotalCount = source.Count();
-                PaginationData.TotalPages = (int)Math.Ceiling(PaginationData.TotalCount / (double)PaginationData.PageSize);
-
+                totalCount = source.Count();
                 var items = source.Skip((PaginationData.PageIndex - 1) * PaginationData.PageSize).Take(PaginationData.PageSize).ToArray();
 
                 Items = new List<TResult>(converter(items));
             }
+            PaginationData = new()
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                TotalCount = totalCount
+            };
         }
 
         /// <summary>
@@ -100,10 +104,12 @@
         /// <param name="converter">The converter.</param>
         public PagedList(IPagedList<TSource> source, Func<IEnumerable<TSource>, IEnumerable<TResult>> converter)
         {
-            PaginationData.PageIndex = source.PaginationData.PageIndex;
-            PaginationData.PageSize = source.PaginationData.PageSize;
-            PaginationData.TotalCount = source.PaginationData.TotalCount;
-            PaginationData.TotalPages = source.PaginationData.TotalPages;
+            PaginationData = new()
+            {
+                PageIndex = source.PaginationData.PageIndex,
+                PageSize = source.PaginationData.PageSize,
+                TotalCount = source.PaginationData.TotalCount
+            };
 
             Items = new List<TResult>(converter(source.Items));
         }

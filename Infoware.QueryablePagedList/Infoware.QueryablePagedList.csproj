@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	  <Description>Queryable PagedList</Description>
@@ -10,11 +10,11 @@
 	  <RepositoryUrl>https://github.com/vicosanz/Infoware.UnitOfWork</RepositoryUrl>
 	  <Authors>Victor Sanchez</Authors>
 	  <Company>Infoware Soluciones</Company>
-	  <Version>1.0.0</Version>
+	  <Version>1.0.5</Version>
 	  <PackageReleaseNotes>Queryable PagedList</PackageReleaseNotes>
   </PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.26" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />
 	</ItemGroup>
 
 </Project>

@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata;
-using System.Data;
-using System.Text.RegularExpressions;
 
 namespace Infoware.UnitOfWork
 {

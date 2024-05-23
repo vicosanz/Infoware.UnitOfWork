@@ -27,8 +27,7 @@ namespace Infoware.QueryablePagedList
                 {
                     PageIndex = pageIndex,
                     PageSize = pageSize,
-                    TotalCount = count,
-                    TotalPages = (int)Math.Ceiling(count / (double)pageSize)
+                    TotalCount = count
                 },
                 Items = items,
             };
