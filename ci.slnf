@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "path": "Infoware.UnitOfWork.sln",
+    "projects": [
+      "Infoware.QueryablePagedList\\Infoware.QueryablePagedList.csproj",
+      "Infoware.Specification.EfCore\\Infoware.Specification.EfCore.csproj",
+      "Infoware.UnitOfWork\\Infoware.UnitOfWork.csproj"
+    ]
+  }
+}
